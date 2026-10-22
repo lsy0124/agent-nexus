@@ -507,8 +507,8 @@
       "bytes": 118
     },
     "scripts/browser_test.py": {
-      "sha256": "6f24bfa38b8762a0a32f3bf42b541934b91707e564c00baac73a776af5e7bcb5",
-      "bytes": 4379
+      "sha256": "f7bce840c796b17803ee7d9462679643696622462bcde63a644440af66e0b31a",
+      "bytes": 4561
     },
     "scripts/checkpoint.py": {
       "sha256": "e30e0cb79e786ac269cf8e7292e3bc7dbe4dc408c2fb18d2641abe17ec38847b",

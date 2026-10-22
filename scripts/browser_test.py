@@ -22,7 +22,10 @@ def main():
     # Manual handoff acceptance writes through a real, isolated Git Worktree.
     # This repository and explicit fixture commit belong only to this test run.
     (test_root / "README.md").write_text("LOCAL BROWSER QA FIXTURE. No real model or external WorkBuddy execution.\n", encoding="utf-8")
-    for args in (["init", "--quiet"], ["add", "--", "README.md"],
+    for args in (["init", "--quiet"],
+                 ["config", "--local", "user.name", "Agent Nexus Browser QA Fixture"],
+                 ["config", "--local", "user.email", "browser-qa@localhost"],
+                 ["add", "--", "README.md"],
                  ["-c", "user.name=Agent Nexus Browser QA Fixture", "-c", "user.email=browser-qa@localhost",
                   "commit", "--quiet", "-m", "Local browser acceptance fixture; no real agent execution"]):
         subprocess.run(["git", *args], cwd=test_root, check=True, capture_output=True, timeout=15)
