@@ -1,0 +1,16 @@
+import { useEffect, useState } from 'react';
+import { request } from './api';
+type Options = { agent_id: string; stream: boolean; max_output_tokens: number; revision: string; reasoning: 'provider' | 'none' | 'low' | 'high' | 'max' };
+
+export function GatewayRequestOptions({ runtimeIds, onSaved }: { runtimeIds: string[]; onSaved: () => void }) {
+  const [routes, setRoutes] = useState<Options[]>([]), [error, setError] = useState('');
+  useEffect(() => { let alive = true; request<{ routes: Options[] }>('/execution/options').then(r => { if (alive) setRoutes(r.routes); }).catch(e => { if (alive) setError(e.message); }); return () => { alive = false; }; }, []);
+  return <details><summary>网关请求设置：流式与输出上限</summary><p className="form-note">保存不发送模型请求。SSE 是否支持需真实验证；提高上限可能增加费用，且仍受任务预算限制。每次只有一个请求，不自动回退或重试。</p>{routes.filter(r => runtimeIds.includes(r.agent_id)).map(r => <RouteOptions key={r.agent_id + r.revision} value={r} onSaved={updated => { setRoutes(routes.map(item => item.agent_id === updated.agent_id ? updated : item)); onSaved(); }}/>)}{error && <p role="alert">{error}</p>}</details>;
+}
+
+function RouteOptions({ value, onSaved }: { value: Options; onSaved: (next: Options) => void }) {
+  const [reasoning, setReasoning] = useState(value.reasoning ?? 'provider');
+  const [stream, setStream] = useState(value.stream), [cap, setCap] = useState(value.max_output_tokens), [approved, setApproved] = useState(false), [busy, setBusy] = useState(false), [error, setError] = useState('');
+  const save = async () => { setBusy(true); setError(''); try { onSaved(await request<Options>('/execution/options/' + value.agent_id, 'PUT', { stream, reasoning, max_output_tokens: cap, revision: value.revision, approve_increase: approved })); } catch (e) { setError((e as Error).message); } finally { setBusy(false); } };
+  return <div className="collaboration-node"><strong>{value.agent_id}</strong><label className="batch-route"><input aria-label={`${value.agent_id} 使用 SSE`} type="checkbox" checked={stream} disabled={busy} onChange={e => setStream(e.target.checked)}/><span>使用 SSE 流式请求，实时接收增量</span></label><label>思考模式（网关支持情况以真实请求为准）<select aria-label={`${value.agent_id} 思考模式`} value={reasoning} disabled={busy} onChange={e => setReasoning(e.target.value as Options['reasoning'])}><option value="provider">服务商默认</option>{value.agent_id === 'deepseek-gateway' && <option value="none">请求关闭思考 · 网关可能不完全支持</option>}<option value="low">低强度思考</option><option value="high">高强度思考</option><option value="max">最高强度思考</option></select></label><label>最大输出 Token<select aria-label={`${value.agent_id} 输出上限`} value={cap} disabled={busy} onChange={e => { setCap(Number(e.target.value)); setApproved(false); }}>{[4096, 8192, 16384, 32768].map(n => <option key={n} value={n}>{n}</option>)}</select></label>{cap > value.max_output_tokens && <label className="batch-route"><input aria-label={`${value.agent_id} 批准提高上限`} type="checkbox" checked={approved} disabled={busy} onChange={e => setApproved(e.target.checked)}/><span>批准将单次最大输出从 {value.max_output_tokens} 提高到 {cap}；可能提高费用，服务商是否支持此上限尚待验证。</span></label>}{error && <p role="alert" className="amber-text">{error}</p>}<button className="button secondary" disabled={busy || (cap > value.max_output_tokens && !approved)} onClick={() => void save()}>保存请求设置（不执行）</button></div>;
+}

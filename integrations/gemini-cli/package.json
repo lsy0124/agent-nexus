@@ -1,0 +1,1 @@
+{"name":"agent-nexus-gemini-runtime","version":"0.1.0","private":true,"dependencies":{"@google/gemini-cli":"0.64.0"}}

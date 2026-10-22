@@ -1,0 +1,20 @@
+{
+  "name": "agent-nexus-console",
+  "private": true,
+  "version": "0.4.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --host 127.0.0.1 --port 5173 --strictPort",
+    "build": "tsc -b && vite build",
+    "test": "vitest run",
+    "test:e2e": "node tests/run-e2e.mjs",
+    "test:codex-live": "node tests/codex-live.mjs",
+    "test:codex-evidence": "node tests/codex-evidence.mjs"
+  },
+  "dependencies": { "react": "^19.0.0", "react-dom": "^19.0.0", "lucide-react": "^0.468.0" },
+  "devDependencies": {
+    "@types/node": "^22.0.0", "@types/react": "^19.0.0", "@types/react-dom": "^19.0.0",
+    "@vitejs/plugin-react": "^6.1.2", "typescript": "~5.7.3", "vite": "^8.3.4",
+    "vitest": "^5.0.4", "@playwright/test": "^1.56.0"
+  }
+}
