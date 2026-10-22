@@ -292,6 +292,15 @@ def test_dsh_detection_runs_both_probes_even_when_one_fails(tmp_path, monkeypatc
     """
     monkeypatch.setattr("nexus.dsh_adapter.shutil.which", lambda name: "fixture-dsh")
     started, finished = [], []
+    preparations = []
+    original_env = DSHAdapter.child_env
+
+    def prepare_once(adapter):
+        preparations.append(1)
+        assert len(preparations) == 1, "shared runtime must be prepared before parallel probes"
+        return original_env(adapter)
+
+    monkeypatch.setattr(DSHAdapter, "child_env", prepare_once)
 
     def inspect(args, **kwargs):
         started.append(args[1])
@@ -303,6 +312,7 @@ def test_dsh_detection_runs_both_probes_even_when_one_fails(tmp_path, monkeypatc
 
     monkeypatch.setattr("nexus.dsh_adapter.subprocess.run", inspect)
     state = asyncio.run(DSHAdapter(tmp_path).detect())
+    assert preparations == [1]
     assert sorted(started) == ["--help", "--version"]
     assert finished == ["--help"]
     assert state["status"] == "disconnected" and not state["ready"]

@@ -87,8 +87,8 @@
       "bytes": 20418
     },
     "backend/nexus/dsh_adapter.py": {
-      "sha256": "7dd2c85f9a4e4289bb007c1b4f3313c82eaf914164a11fe5e84693d5ad691a0c",
-      "bytes": 21661
+      "sha256": "8928110a625e68abd41e9d09fb6d2560f1d7c37c20602def4ffd23a40a2d6655",
+      "bytes": 21460
     },
     "backend/nexus/execution_desk.py": {
       "sha256": "9f2858c154e293df517ba6ad98e8019d68125774641ba917297ed6bc5915f914",
@@ -219,8 +219,8 @@
       "bytes": 1827
     },
     "backend/tests/test_codex_bridge.py": {
-      "sha256": "0ae4319066e274dcb62b13b4a06031126a553d149b530c971cff90854327d60f",
-      "bytes": 15525
+      "sha256": "58eb880a9caa4008d927ece568ab00edfd85bca0e900be4ad737fc0665669589",
+      "bytes": 15274
     },
     "backend/tests/test_dispatch_policy.py": {
       "sha256": "527bc641827a1683e7e3c9c85c75a5cdb22edb84804e4889a86b961208bd25db",
@@ -247,8 +247,8 @@
       "bytes": 10890
     },
     "backend/tests/test_gemini_dsh.py": {
-      "sha256": "cb22b88eefb095c29eea3bc33a679f0d7247e36e6213921dde9c22f80a28509d",
-      "bytes": 19939
+      "sha256": "e8924567c9fe7e922b1497b856fc594fd40b0214a2d8da4e6c0bfd9c72ddf926",
+      "bytes": 20292
     },
     "backend/tests/test_gemini_gateway.py": {
       "sha256": "c00ccc8c644a6c5a59a797884ee9ae40ec545988683dedd4c21a18b0ab6c22c4",

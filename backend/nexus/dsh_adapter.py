@@ -186,7 +186,7 @@ class DSHAdapter(AgentAdapter):
         import asyncio
 
         def inspect(argument):
-            process = subprocess.run([self.binary, argument], cwd=self.root, env=self.child_env(),
+            process = subprocess.run([self.binary, argument], cwd=self.root, env=inspection_env,
                                      capture_output=True, text=True, encoding="utf-8", errors="replace",
                                      timeout=15, creationflags=getattr(subprocess, "CREATE_NO_WINDOW", 0))
             if process.returncode != 0:
@@ -194,6 +194,9 @@ class DSHAdapter(AgentAdapter):
             return process.stdout[:32000]
 
         try:
+            # Prepare the shared runtime once before worker threads read it.
+            # Concurrent first-time patch creation can fail on Windows.
+            inspection_env = self.child_env()
             # --version and --help are independent; overlap their startup.
             # return_exceptions keeps a failing call from cancelling the other one
             # mid-flight: both are always inspected, never half a probe.

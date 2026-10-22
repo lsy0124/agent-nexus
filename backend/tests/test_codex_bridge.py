@@ -134,7 +134,7 @@ def test_cli_failure_timeout_and_unexpected_tools_fail_closed(tmp_path, mode, ki
 
 
 def test_cli_command_is_parameterized_and_disables_execution(tmp_path):
-    adapter = CodexAdapter(tmp_path)
+    adapter = CodexAdapter(tmp_path, executable=str(tmp_path / "codex-fixture.exe"))
     command = adapter.command(ExecutionContext("fixture", str(tmp_path), '$(danger) --bypass', ()))
     joined = " ".join(str(x) for x in command)
     assert "$(danger)" not in joined
